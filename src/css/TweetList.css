@@ -1,0 +1,177 @@
+.tweet-card {
+
+    width: 95%;
+    margin: 0 auto 10px;
+    background: #fff;
+    min-height: 100px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+    -webkit-transition: .15s;
+    transition: .15s;
+    /*cursor: pointer*/
+
+}
+
+.tweet-card .card-name {
+    padding: 5px 10px;
+    border-bottom: 1px solid #dbdbdb;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-world
+}
+
+
+.tweet-card .card-container {
+    padding: 10px;
+    border-bottom: 1px solid #dbdbdb;
+    zoom: 1
+}
+
+.tweet-card .card-performers {
+    zoom: 1;
+    padding: 5px 10px;
+}
+
+.tweet-card .card-performers:after, .tweet-card .card-performers:before{
+    content: "";
+    display: table
+}
+
+.tweet-card .card-performers:after{
+    clear: both;
+}
+
+.tweet-card .card-performers .add-performers{
+    float: left;
+}
+
+.tweet-card .card-performers .delete-performers{
+    float: right;
+}
+
+.tweet-card .card-performers .add-performers a, .tweet-card .card-performers .delete-performers a{
+    display: block;
+    float: left;
+    margin-right: 3px
+}
+
+
+.tweet-card .card-performers .add-performers .performer, .tweet-card .card-performers .delete-performers .performer{
+    float: left;
+}
+
+.tweet-card .card-performers .add-performers .performer img, .tweet-card .card-performers .delete-performers .performer img {
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+.tweet-card .card-container .card-avatar-wrap {
+    width: 70px;
+    float: left;
+    margin-bottom: 5px;
+}
+
+.tweet-card .card-container .card-avatar-wrap img{
+    width: 50px;
+    height: 50px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 1px solid #dbdbdb
+}
+
+.tweet-card .card-container .card-content {
+    white-space: normal
+}
+
+.tweet-card .card-container .card-content .card-author-name {
+    font-size: 16px;
+    font-weight: bolder
+}
+
+.tweet-card .card-container .card-content .card-author-screen-name {
+    font-size: 12px;
+    font-weight: lighter;
+}
+
+
+.tweet-card .card-container .card-content p {
+    margin: 5px 0
+}
+
+
+.clickedNER {
+    /*background-color: steelblue;*/
+    /*color: yellow;*/
+    /*border-color: darkorange;*/
+    /*border-width: thick;*/
+    text-shadow: -2px 0 yellow, 0 2px yellow, 2px 0 yellow, 0 -2px yellow;
+}
+
+.HASHTAG.highlight  {
+    background-color: #d9b8f1;
+}
+
+.DATE.highlight  {
+    background-color: #BDC03F;
+    /*background-paleteColor: #d9b8f1;*/
+}
+
+
+/*Name,*/
+/*Mist*/
+/*Place*/
+
+
+
+.LOCATION.highlight  {
+    background-color: #ffe543;
+}
+
+.NUMBER.highlight  {
+    background-color: #ffe543;
+}
+
+.LOCATION.highlight  {
+    background-color: #FF9B14;
+}
+
+.DURATION.highlight  {
+    background-color: #F69AC1;
+}
+
+.MISC.highlight  {
+    background-color: #8EB4FF;
+}
+
+.unused.highlight  {
+    background-color: #4B0082;
+}
+
+div#doc-panel {
+    width: 30%;
+}
+
+div#tool {
+    position: fixed;
+    width: 30%;
+    top: 0;
+    background-color: white;
+}
+
+em, button.category {
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 2px;
+    box-shadow: 2px 2px 2px #888888;
+}
+
+h3.panel-heading {
+    margin: 0px;
+}
+
+#clearFilter {
+    float: right;
+}

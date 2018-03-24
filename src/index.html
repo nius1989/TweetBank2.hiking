@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>TweetBank: A visual analytic tool for tweet repository</title>
+
+    <link rel="stylesheet" type="text/css" href="css/graph.css"/>
+    <link rel="stylesheet" type="text/css" href="css/map.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery.tipsy.css"/>
+    <link rel="stylesheet" href="css/bootstrap/css/bootstrap.css">
+    <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.v3.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>-->
+    <!--<link ref="stylesheet" type="text/css" href="css/bootstrap.min.css"/>-->
+    <link rel="stylesheet" type="text/css" href="css/notifIt.css"/>
+    <link rel="stylesheet" type="text/css" href="css/tagit.ui-zendesk.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery.tagit.css"/>
+    <!--<link type="text/css" rel="stylesheet" href="css/jquery-ui.css"/>-->
+    <link rel="stylesheet" type="text/css" href="css/1.12.1-jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="css/TweetList.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-daterangepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="css/searchbar.css"/>
+    <link rel="stylesheet" type="text/css" href="css/barchart-dropdown.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-toggle.min.css"/>
+
+
+    <script type="text/javascript" src="lib/jquery/jquery-1.12.1.min.js"></script>
+    <script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/jquery/jquery-ui.js"></script>
+    <script type="text/javascript" src="lib/topojson.js"></script>
+    <script type="text/javascript" src="lib/tag-it.js"></script>
+    <script type="text/javascript" src="lib/notifIt.js"></script>
+    <script type="text/javascript" src="lib/d3/d3.v4.js"></script>
+    <script type="text/javascript" src="lib/d3/d3.layout.cloud.js"></script>
+    <script type="text/javascript" src="lib/spinner/spin.min.js"></script>
+    <script type="text/javascript" src="lib/d3/colorbrewer.v1.js"></script>
+    <script type="text/javascript" src="lib/moment.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap-daterangepicker.js"></script>
+    <script type="text/javascript" src="lib/bootstrap-toggle.min.js"></script>
+
+</head>
+
+<body style="height: 100vh; width:100vw; overflow-x: hidden; overflow-y: hidden">
+<div style="height:100%; width:100%;display:flex;flex-direction:column;">
+
+    <div id="header"
+         style="min-height:35px;height:2%;background-color:#074563;color:white;overflow:hidden;position:relative;">
+        <div style="margin: 0;height:30px;display:inline-block;width:500px;position:absolute;margin-right:10px;">
+            <div style="margin:0;height:40px;padding:5px;font-size:20px;">
+                <span style="font-weight:normal;"> TweetBank</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="main" style="position:relative;display:flex;align-self:stretch;height:93%;">
+
+        <div id="tweet-column"
+             style="border-right:solid 1px #ccc; float: left; width: 25%; height: 100%; ">
+            <div id="control-box" style="width: 100%; height: 15%">
+                <div style="position: relative;">
+                    <div class="input-group stylish-input-group" style="width: 70%; float: left; margin: 0px">
+                        <input id="search_box" type="text" class="form-control" placeholder="Search">
+                        <span class="input-group-addon">
+                                        <button type="submit" onclick="perform_search($('#search_box').val())">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </span>
+                    </div>
+                    <div class="form-group" style="width: 30%; float: right; margin: 0px">
+                        <div class="col-lg-push-12 selectContainer">
+                            <select id="constrain-query-type" class="form-control" name="size"
+                                    style="font-size: x-small"
+                                    onchange="setQueryType(this.selectedIndex)">
+                                <option>Tweet</option>
+                                <option>User name</option>
+                                <option>Hashtag</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="width: 100%; float: left; margin: 0px">
+                    <div class="col-lg-push-12 selectContainer">
+                        <select id="constrain-query-cluster" class="form-control" name="size"
+                                style="font-size: x-small"
+                                onchange="setQueryCluster(this.options[this.selectedIndex].value)">
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 100%">
+                    <input class="col-lg-12" id="date-range" type="text" name="daterange"/>
+                </div>
+                <div class="form-group" style="width: 100%">
+                    <div>
+                        <select
+                                id="constrain-list"
+                                class="form-control" name="size"
+                                style="height: 28px; width: 50%;font-size: small; float: left"
+                                onchange="showSubList(this.selectedIndex)">
+                            <option>Num of followers</option>
+                            <option>Num of friends</option>
+                            <option>Num of tweets</option>
+                            <option>Num of favourites</option>
+                            <option>User language</option>
+                        </select>
+
+                        <select class="form-control" name="size"
+                                id="constrain-sub-list"
+                                onchange="updateConstrainSelect(this)"
+                                style="height: 28px;width: 50%; font-size: small; float: right">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tweet-box" style="height:85%">
+                <div id="tweet-list-border" class='panel panel-default'
+                     style="height: 100%; width: 100%;  overflow-y: auto; overflow-x: hidden  ">
+                    <!--<div id="tweet-list-border" class='panel panel-default' style="height: 75%; width: 100%; overflow-y: scroll; overflow-x: hidden">-->
+                    <div id="tweet-list" style="overflow: hidden;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="vis-column"
+             style="height: 100%; width: 45%; border-right:solid 1px #ccc; overflow-y: auto; overflow-x: hidden">
+            <!--<div style="font-size:12px;background-color:#eee;font-weight:bold;padding:5px;">Social Network</div>-->
+            <!--<div id="graph-border" style=-->
+            <!--"position: relative; height: 60%; width: 100%">-->
+            <!--<svg id="graph"-->
+            <!--style="display: flex; height: 100%; width: 100%"></svg>-->
+            <!--</div>-->
+            <div style="font-size:12px;background-color:#eee;font-weight:bold;padding:5px;">User information
+            </div>
+
+            <div id="barchart-border" style="height: 60%; width: 100%; position: relative">
+                <div class="form-group">
+                    <div class="selectContainer" style="display: inline-block">
+                        <select class="form-control" name="size" style="height: 30px; font-size: x-small"
+                                onchange="updateBarChart(this.selectedIndex)">
+                            <option>Num of followers</option>
+                            <option>Num of friends</option>
+                            <option>Num of tweets</option>
+                            <option>Num of favourites</option>
+                            <option>User language</option>
+                        </select>
+                    </div>
+                    <div class="btn-group" data-toggle="buttons" style="display: inline-block">
+                        <label id="barchart-bar-label" class="btn btn-primary active"
+                               style="height: 30px; font-size: x-small">
+                            <input id="barchart-bar" type="radio" name="options" autocomplete="off" checked
+                                   onclick="updateBarChartType('bar')"> Bar chart
+                        </label>
+                        <label id="barchart-pie-label" class="btn btn-primary"
+                               style="height: 30px; font-size: x-small">
+                            <input id="barchart-pie" type="radio" name="options" autocomplete="off"
+                                   onclick="updateBarChartType('pie')"> Pie chart
+                        </label>
+                    </div>
+                    <div class="checkbox" style="display: inline-block">
+                        <label>
+                            <input id="barchart-checkbox" type="checkbox" data-toggle="toggle" style="height: 30px"
+                                   onchange="initBarChart()">
+                            Search History
+                        </label>
+                    </div>
+                </div>
+                <div id="barchart-tooltip" style="height: 90%; width: 100%; font-size: 12px; position: relative">
+                    <svg id="barchart" style="height: 100%; width: 100%"></svg>
+                </div>
+            </div>
+            <div style="font-size:12px;background-color:#eee;font-weight:bold;padding:5px;">Time Line</div>
+
+            <div id="timeline_border" style="height: 40%; position: relative">
+                <div class="checkbox" style="display: inline-block">
+                    <label>
+                        <input id="timeline-checkbox" type="checkbox" data-toggle="toggle" style="height: 30px"
+                               onchange="initTimeLine()">
+                        Search History
+                    </label>
+                </div>
+                <div id="timeline" style="height:100%;width: 100%"></div>
+            </div>
+
+
+        </div>
+
+        <div id="detail-column"
+             style="border-right:solid 1px #ccc; float: right; overflow-y: auto; overflow-x: hidden; width: 30%">
+            <div style="font-size:12px;background-color:#eee;font-weight:bold;padding:5px;">Word Cloud</div>
+            <div id="wordcould-border" style="height:46%; width: 100%">
+                <svg id="word-cloud"
+                     style="height:100%; width: 100%"></svg>
+            </div>
+
+            <div style="font-size:12px;background-color:#eee;font-weight:bold;padding:5px;">Map</div>
+            <!--<div id="map-border" style="height: 46%; width:100%; position: relative">-->
+            <!--&lt;!&ndash;<div id="map-legend" style="height:100%; width: 10%; float: left"></div>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div id="map-map" style="height:100%; width: 90%; float: right; position: relative">&ndash;&gt;-->
+            <!--<svg id="map" style="height:100%; width: 100%"></svg>-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--</div>-->
+
+
+            <!--<div style="font-size:12px;background-color:#eee;font-weight:bold;padding:5px;">Geo-location</div>-->
+            <!--<div id="worldmap-border" style="height: 50%; width:100%; position: relative">-->
+            <!--<svg id="world-map" style="height:100%; width: 100%"></svg>-->
+            <!--</div>-->
+
+            <div id="statemap-border" style="height:50%; width: 100%; overflow: hidden">
+                <div id="statemap-legend" style="height:100%; width: 10%; float: left"></div>
+                <div id="statemap-map" style="height:100%; width: 90%; float: right; position: relative">
+                    <svg id="statemap" style="height:100%; width: 100%"></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" src="scripts/controller/PHPRouter.js"></script>
+<script type="text/javascript" src="scripts/controller/util.js"></script>
+<script type="text/javascript" src="scripts/controller/field_config.js"></script>
+<script type="text/javascript" src="scripts/controller/SOLRAPI.js"></script>
+<script type="text/javascript" src="scripts/controller/Tweet.js"></script>
+<script type="text/javascript" src="scripts/views/WordCloud.js"></script>
+<script type="text/javascript" src="scripts/views/CardView.js"></script>
+<script type="text/javascript" src="scripts/views/Timeline.js"></script>
+<!--<script type="text/javascript" src="scripts/views/SocialNetworkGraph.js"></script>-->
+<!--<script type="text/javascript" src="scripts/views/Map.js"></script>-->
+<script type="text/javascript" src="scripts/views/StateMap.js"></script>
+<!--<script type="text/javascript" src="scripts/views/WorldMap.js"></script>-->
+<!--<script type="text/javascript" src="scripts/views/StateMap.js"></script>-->
+<script type="text/javascript" src="scripts/views/BarChart.js"></script>
+<script type="text/javascript" src="scripts/views/main.js"></script>
+</html>
