@@ -1,6 +1,6 @@
 <?php
 $param = $_GET['query'];
-$solrURL = "http://128.173.239.221:8983/solr/shooting_2015/select?q=";
+$solrURL = "http://128.173.239.221:8983/solr/hiking_core/select?q=";
 $curl = curl_init();
 curl_setopt($curl, CURLOPT_URL, $solrURL . $param);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

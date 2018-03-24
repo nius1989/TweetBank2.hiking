@@ -10,7 +10,7 @@ $.ajaxSetup({
 //during debugging, the solr protocol must be tuned to localhost. Change the solr protocol in field_config.js to match the ssh forward.
 //false: connect to solr through PHP
 //this routes the query through PHPRouter on the server
-var debugMode = true;
+var debugMode = false;
 
 function query_solr(query) {
     if (debugMode) {
@@ -29,7 +29,7 @@ function query_social_network(query) {
 function global_constrain() {
     var params =
         globalConstrainField + ':' + globalConstrainParameter + ' AND ' +
-        field_cluster + ':' + globalConstrainCluster + ' AND ' +
+        // field_cluster + ':' + globalConstrainCluster + ' AND ' +
         field_post_time + ':[' + globalStartDate.toISOString() + ' TO ' + globalEndDate.toISOString() + "]";
     return params;
 }

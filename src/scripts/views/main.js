@@ -1,8 +1,8 @@
 // Load dataset from backend, and generate clusters and networks.
 
 //global limitation queries
-var globalStartDate = new Date('2015-01-01T00:00:00Z');//from this time
-var globalEndDate = new Date('2016-01-01T00:00:00Z');//to this time
+var globalStartDate = new Date('2017-01-01T00:00:00Z');//from this time
+var globalEndDate = new Date('2017-12-31T00:00:00Z');//to this time
 var globalQuery = '*';//search word
 var globalQueryType = field_tweet_content;
 var globalQueryHistory = [];
