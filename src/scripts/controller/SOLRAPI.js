@@ -29,7 +29,7 @@ function query_social_network(query) {
 function global_constrain() {
     var params =
         globalConstrainField + ':' + globalConstrainParameter + ' AND ' +
-        // field_cluster + ':' + globalConstrainCluster + ' AND ' +
+        field_cluster + ':' + globalConstrainCluster + ' AND ' +
         field_post_time + ':[' + globalStartDate.toISOString() + ' TO ' + globalEndDate.toISOString() + "]";
     return params;
 }
