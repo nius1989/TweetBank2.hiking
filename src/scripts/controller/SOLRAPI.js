@@ -37,7 +37,7 @@ function global_constrain() {
 
 //Configure solr query field based on search bar input.
 function global_query(key) {
-    var keys=key.split("/\s+/");
+    var keys=key.split(/\s+/);
     var qs=[];
     if (globalQueryType === field_tweet_content) {
         keys.forEach(function (t) {
