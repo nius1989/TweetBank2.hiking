@@ -92,8 +92,6 @@ function socialGraph(graph) {
             .attr("y2", function (d) {
                 return d.target.y;
             });
-
-
     }
 
     function dragstarted(d) {

@@ -1,7 +1,7 @@
 /**
  * Created by Shuo on 11/2/2017.
  */
-var solrURL = "http://localhost:9984/solr/hiking_core2/select?";
+var solrURL = "http://localhost:9984/solr/AppalachianTrail_core/select?";
 //keys for solr query.
 var field_tweet_id = "id";
 var field_urls = "urls";
