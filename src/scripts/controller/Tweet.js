@@ -4,7 +4,6 @@
 function Tweet(jsonDoc) {
     var tweet = {};
 
-    console.log(jsonDoc);
     //tweet meta
     tweet.id = jsonDoc.hasOwnProperty(field_tweet_id) ? jsonDoc[field_tweet_id] : "";//tweet id
     tweet.post_time = jsonDoc.hasOwnProperty(field_post_time) ? new Date(jsonDoc[field_post_time]).toDateString() : "";//tweet time

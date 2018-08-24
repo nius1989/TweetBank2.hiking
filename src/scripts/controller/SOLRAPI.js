@@ -37,15 +37,24 @@ function global_constrain() {
 
 //Configure solr query field based on search bar input.
 function global_query(key) {
+    var keys=key.split(" ");
+    var qs=[];
     if (globalQueryType === field_tweet_content) {
-        return field_tweet_content + ":" + key;
+        keys.forEach(function (t) {
+            qs.push(field_tweet_content+":"+t);
+        });
     }
     else if (globalQueryType === field_user_name) {
-        return "(" + field_user_name + ":" + key + " OR " + field_user_screen_name + ":" + key + ")";
+        keys.forEach(function (t) {
+            qs.push("(" + field_user_name + ":" + t + " OR " + field_user_screen_name + ":" + t + ")");
+        });
     }
     else if (globalQueryType === field_hastags) {
-        return field_hastags + ":" + key;
+        keys.forEach(function (t) {
+            qs.push(field_hastags + ":" + t);
+        });
     }
+    return qs.join(" AND ");
 }
 
 //retrieve the queried term from the returned JSON
