@@ -37,7 +37,7 @@ function global_constrain() {
 
 //Configure solr query field based on search bar input.
 function global_query(key) {
-    var keys=key.split(" ");
+    var keys=key.split("/\s+/");
     var qs=[];
     if (globalQueryType === field_tweet_content) {
         keys.forEach(function (t) {
@@ -54,21 +54,9 @@ function global_query(key) {
             qs.push(field_hastags + ":" + t);
         });
     }
-    return qs.join(" AND ");
+    return qs.join(" AND ")+"&key="+key;
 }
 
-//retrieve the queried term from the returned JSON
-function getQueryTerm(queryfield) {
-    var term = "";
-    queryfield.split(/(AND|OR|\(|\))/).forEach(function (d) {
-        if (d.indexOf(field_tweet_content) !== -1
-            || d.indexOf(field_user_name) !== -1
-            || d.indexOf(field_hastags) !== -1) {
-            term = d;
-        }
-    });
-    return term.split(':')[1].trim();
-}
 
 //Get all available cluster types from solr. The categories will appear in the dropdown list
 function query_solr_cluster() {
@@ -161,18 +149,18 @@ function solr_get_timeline(key, desiredCount) {
         "&fl=" + field_hastags + //only include hashtags in results for faster query
         "&rows=1&wt=json&indent=true&json.wrf=solr_get_timeline_callback";
     query_solr(query);
-    // console.log(query);
+    console.log(query);
 }
 
 //callback method for updating timeline
 function solr_get_timeline_callback(response) {
+    console.log(response);
     var timeRegex = /(\d{4})-(\d{2})-(\d{2})T(\d{2})\:(\d{2})\:(\d{2})\.000Z/g;
     var json = String(JSON.stringify(response));
     var root = JSON.parse(json);
     var facet_queries_results = root.facet_counts.facet_queries;
     //get the query term
-    var queryfield = root.responseHeader.params.q;
-    var term = getQueryTerm(queryfield);
+    var term = root.responseHeader.params.key;
     var faceted_results = [];
     for (var key in facet_queries_results) {
         if (facet_queries_results.hasOwnProperty(key)) {
@@ -282,8 +270,7 @@ function solr_get_user_info_callback(response) {
     var root = JSON.parse(json);
     var facet_queries_results = root.facet_counts.facet_queries;
     //get the query term
-    var queryfield = root.responseHeader.params.q;
-    var term = getQueryTerm(queryfield);
+    var term = root.responseHeader.params.key;
     var faceted_results = {"key": term};
     //trim the number to simple form
     for (var key in facet_queries_results) {
@@ -333,8 +320,7 @@ function solr_get_user_state_location_callback(response) {
     var root = JSON.parse(json);
     var facet_queries_results = root.facet_counts.facet_queries;
     //get the query term
-    var queryfield = root.responseHeader.params.q;
-    var term = getQueryTerm(queryfield);
+    var term = root.responseHeader.params.key;
     var faceted_results = [];
     for (var key in facet_queries_results) {
         if (facet_queries_results.hasOwnProperty(key)) {
@@ -368,8 +354,7 @@ function solr_get_place_country_code_callback(response) {
     var root = JSON.parse(json);
     var facet_queries_results = root.facet_counts.facet_fields[field_user_location];
     //get the query term
-    var queryfield = root.responseHeader.params.q;
-    var term = getQueryTerm(queryfield);
+    var term = root.responseHeader.params.key;
     var faceted_results = [];
     for (var i = 0; i < facet_queries_results.length; i += 2) {
         faceted_results.push({
